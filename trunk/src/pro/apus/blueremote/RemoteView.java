@@ -143,11 +143,11 @@ public class RemoteView extends View {
 			
 			//canvas.drawRect(throttleRect, paint);
 			canvas.drawLine(canvas.getWidth()/2, 0, canvas.getWidth()/2, canvas.getHeight(), borderPaint);
-			canvas.drawText("throttle: "+throttle, 10, 20, borderPaint);
-			canvas.drawText("rudder: "+rudder, 10, 40, borderPaint);
-			canvas.drawText("aileron: "+aileron, 3*getWidth()/4, 20, borderPaint);
-			canvas.drawText("elevator: "+elevator, 3*getWidth()/4, 40, borderPaint);
-			canvas.drawText(status, getWidth()/4, getHeight()-20, borderPaint);
+			canvas.drawText("throttle: "+throttle, 10+getWidth()/4, 20, borderPaint);
+			canvas.drawText("rudder: "+rudder, 10+getWidth()/4, 40, borderPaint);
+			canvas.drawText("aileron: "+aileron, 10+getWidth()/2, 20, borderPaint);
+			canvas.drawText("elevator: "+elevator, 10+getWidth()/2, 40, borderPaint);
+			canvas.drawText(status, 10+getWidth()/4, getHeight()-20, borderPaint);
     	}	
     }
 

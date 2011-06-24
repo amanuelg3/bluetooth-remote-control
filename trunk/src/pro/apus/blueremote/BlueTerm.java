@@ -377,33 +377,44 @@ public class BlueTerm extends Activity {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			int i = 0;
-			byte[] buffer = new byte[100];
+
 			while (mRemoteView != null) {
 				// Todo: This protocol is stupid and inefficient. For this to 
 				// have a chance to work in real life, I need to reduce to 1 byte per
 				// control, not as many as I'm using now. 
 				if (mSerialService.getState() == mSerialService.STATE_CONNECTED) {
-					String text = "t="+(mRemoteView.throttle*10)+";\r\n"+
-						"r="+(mRemoteView.rudder*10+1000)+";\r\n"+
-						"a="+(mRemoteView.aileron*10+1000)+";\r\n"+
-						"p="+(mRemoteView.elevator*10+1000)+";\r\n";
-					buffer = ("p="+(mRemoteView.elevator*10+1000)+";\r\n").getBytes();					
-		        	mSerialService.write(buffer);	
-					buffer = ("r="+(mRemoteView.rudder*10+1000)+";\r\n").getBytes();					
-		        	mSerialService.write(buffer);	
-					buffer = ("a="+(mRemoteView.aileron*10+1000)+";\r\n").getBytes();					
-		        	mSerialService.write(buffer);	
-					buffer = ("t="+(mRemoteView.throttle*10)+";\r\n").getBytes();					
+					String text = "t="+mRemoteView.throttle+" "+
+						"r="+mRemoteView.rudder+" "+
+						"a="+mRemoteView.aileron+" "+
+						"p="+mRemoteView.elevator+" ";
+					byte[] buffer = new byte[8];
+					buffer[0] = '#';
+					buffer[1] = limit(mRemoteView.throttle + 32, 126);
+					buffer[2] = limit(mRemoteView.rudder + 32, 126);
+					buffer[3] = limit(mRemoteView.aileron + 32, 126);
+					buffer[4] = limit(mRemoteView.elevator + 32, 126);
+					buffer[5] = ';';
+					buffer[6] = '\r';
+					buffer[7] = '\n';
 		        	mSerialService.write(buffer);	
 					publishProgress(text);
+					sleep(50);
 				}
 			}
 			publishProgress("Disconnecting Bluetooth");
 			return null;
 		}
 
-
+		private byte limit(int value, int max)
+		{
+			if (value > max) {
+				return (byte) max;
+			}
+			else {
+				return (byte) value;
+			}
+			
+		}
 
 		@Override
 		protected void onProgressUpdate(String... progress) {
